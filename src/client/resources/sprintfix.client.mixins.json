@@ -3,9 +3,14 @@
   "minVersion": "0.8",
   "package": "me.navoei.sprintfix.mixin.client",
   "compatibilityLevel": "JAVA_21",
-  "client": [ "SprintFixClientMixin"
+  "client": [
+    "PlayerMixin",
+    "SprintFixClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "mixins": [
+    "ItemPrioritizationMixins.ItemMixin"
+  ]
 }

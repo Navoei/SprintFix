@@ -11,7 +11,7 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "me.navoei.sprintfix.client.SprintfixClient"
+      "me.navoei.sprintfix.client.SprintFixClient"
     ],
     "main": [
       "me.navoei.sprintfix.Sprintfix"
