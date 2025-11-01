@@ -3,26 +3,19 @@
   "id": "sprintfix",
   "version": "${version}",
   "name": "SprintFix",
-  "description": "",
-  "authors": [],
-  "contact": {},
+  "description": "${mod_description}",
+  "authors": [
+    "Navoei"
+  ],
+  "contact": {
+    "sources": "https://github.com/Navoei/SprintFix",
+    "issues": "https://discord.gg/YJpqruvZ97"
+  },
   "license": "MIT",
   "icon": "assets/sprintfix/icon.png",
   "environment": "client",
-  "entrypoints": {
-    "client": [
-      "me.navoei.sprintfix.client.SprintFixClient"
-    ],
-    "main": [
-      "me.navoei.sprintfix.Sprintfix"
-    ]
-  },
   "mixins": [
-    "sprintfix.mixins.json",
-    {
-      "config": "sprintfix.client.mixins.json",
-      "environment": "client"
-    }
+    "sprintfix.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",

@@ -1,4 +1,4 @@
-package me.navoei.sprintfix.mixin.client;
+package me.navoei.sprintfix.mixin;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
