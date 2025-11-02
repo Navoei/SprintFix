@@ -23,6 +23,15 @@ public abstract class MixinLocalPlayer_FixSprintCheck extends AbstractClientPlay
     @Shadow
     protected abstract boolean canStartSprinting();
 
+    @Shadow
+    protected abstract boolean isSprintingPossible(boolean bl);
+
+    @Shadow
+    protected abstract boolean isSlowDueToUsingItem();
+
+    @Shadow
+    public abstract boolean isMovingSlowly();
+
     @Unique
     private boolean sprintfix$shouldRestoreSprint = false;
 
@@ -32,7 +41,7 @@ public abstract class MixinLocalPlayer_FixSprintCheck extends AbstractClientPlay
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/AbstractClientPlayer;tick()V", shift = At.Shift.AFTER))
     private void sprintfix$fixMC152728(CallbackInfo ci) {
-        if (sprintfix$shouldRestoreSprint && !this.input.hasForwardImpulse()) {
+        if (sprintfix$shouldRestoreSprint && !this.sprintfix$canResumeSprinting()) {
             sprintfix$shouldRestoreSprint = false;
         }
 
@@ -43,9 +52,17 @@ public abstract class MixinLocalPlayer_FixSprintCheck extends AbstractClientPlay
                 sprintfix$shouldRestoreSprint = true;
             }
         } else if (sprintfix$shouldRestoreSprint && !this.isUsingItem()) {
-            this.setSprinting(this.canStartSprinting());
+            this.setSprinting(true);
             sprintfix$shouldRestoreSprint = false;
         }
+    }
+
+    @Unique
+    private boolean sprintfix$canResumeSprinting() {
+        return this.input.hasForwardImpulse() &&
+                this.isSprintingPossible(this.getAbilities().flying) &&
+                (!this.isFallFlying() || this.isUnderWater()) &&
+                (!this.isMovingSlowly() || this.isUnderWater());
     }
 }
 
