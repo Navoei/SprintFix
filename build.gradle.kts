@@ -1,5 +1,3 @@
-import jdk.internal.classfile.TypeKind.from
-
 plugins {
     id("fabric-loom") version "1.12-SNAPSHOT"
     id("maven-publish")
