@@ -5,9 +5,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.ClientInput;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.UseEffects;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -35,14 +33,18 @@ public abstract class MixinLocalPlayer_FixSprintCheck extends AbstractClientPlay
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/AbstractClientPlayer;tick()V", shift = At.Shift.AFTER))
     private void sprintfix$fixMC152728(CallbackInfo ci) {
+        if (sprintfix$shouldRestoreSprint && !this.sprintfix$canResumeSprinting()) {
+            sprintfix$shouldRestoreSprint = false;
+        }
+
         if (this.isSprinting() && this.isUsingItem()) {
             ItemStack stack = this.getUseItem();
-            if (!stack.isEmpty() && !stack.getOrDefault(DataComponents.USE_EFFECTS, UseEffects.DEFAULT).canSprint()) {
+            if (!stack.isEmpty() /*&& !stack.getOrDefault(DataComponents.USE_EFFECTS, UseEffects.DEFAULT).canSprint()*/) {
                 this.setSprinting(false);
                 sprintfix$shouldRestoreSprint = true;
             }
         } else if (sprintfix$shouldRestoreSprint && !this.isUsingItem()) {
-            this.setSprinting(this.sprintfix$canResumeSprinting());
+            this.setSprinting(true);
             sprintfix$shouldRestoreSprint = false;
         }
     }
