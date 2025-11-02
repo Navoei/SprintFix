@@ -1,3 +1,5 @@
+import jdk.internal.classfile.TypeKind.from
+
 plugins {
     id("fabric-loom") version "1.12-SNAPSHOT"
     id("maven-publish")
@@ -77,9 +79,9 @@ tasks.jar {
 // configure the maven publication
 publishing {
     publications {
-        create("mavenJava", MavenPublication::class.java) {
+        create<MavenPublication>("mavenJava") {
             artifactId = mod.archivesBaseName
-            // TODO: from(components.java)
+            from(components["java"])
         }
     }
 
