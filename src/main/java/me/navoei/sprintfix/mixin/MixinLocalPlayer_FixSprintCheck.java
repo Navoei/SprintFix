@@ -21,7 +21,7 @@ public abstract class MixinLocalPlayer_FixSprintCheck extends AbstractClientPlay
     public ClientInput input;
 
     @Shadow
-    protected abstract boolean isSprintingPossible(boolean bl);
+    protected abstract boolean isSprintingPossible(boolean flying);
 
     @Shadow
     public abstract boolean isMovingSlowly();
@@ -35,10 +35,6 @@ public abstract class MixinLocalPlayer_FixSprintCheck extends AbstractClientPlay
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/AbstractClientPlayer;tick()V", shift = At.Shift.AFTER))
     private void sprintfix$fixMC152728(CallbackInfo ci) {
-        if (sprintfix$shouldRestoreSprint && !this.sprintfix$canResumeSprinting()) {
-            sprintfix$shouldRestoreSprint = false;
-        }
-
         if (this.isSprinting() && this.isUsingItem()) {
             ItemStack stack = this.getUseItem();
             if (!stack.isEmpty() && !stack.getOrDefault(DataComponents.USE_EFFECTS, UseEffects.DEFAULT).canSprint()) {
@@ -46,7 +42,7 @@ public abstract class MixinLocalPlayer_FixSprintCheck extends AbstractClientPlay
                 sprintfix$shouldRestoreSprint = true;
             }
         } else if (sprintfix$shouldRestoreSprint && !this.isUsingItem()) {
-            this.setSprinting(true);
+            this.setSprinting(this.sprintfix$canResumeSprinting());
             sprintfix$shouldRestoreSprint = false;
         }
     }
