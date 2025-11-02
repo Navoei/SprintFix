@@ -1,24 +1,24 @@
 {
-  "schemaVersion": 1,
-  "id": "sprintfix",
-  "version": "${version}",
-  "name": "SprintFix",
-  "description": "${mod_description}",
-  "authors": [
-    "Navoei"
-  ],
-  "contact": {
-    "sources": "https://github.com/Navoei/SprintFix",
-    "issues": "https://discord.gg/YJpqruvZ97"
-  },
-  "license": "MIT",
-  "icon": "assets/sprintfix/icon.png",
-  "environment": "client",
-  "mixins": [
-    "sprintfix.mixins.json"
-  ],
-  "depends": {
-    "fabricloader": ">=${loader_version}",
-    "minecraft": "${minecraft_version}"
-  }
+	"schemaVersion": 1,
+	"id": "sprintfix",
+	"version": "${version}",
+	"name": "SprintFix",
+	"description": "${mod_description}",
+	"authors": [
+		"Navoei"
+	],
+	"contact": {
+		"sources": "https://github.com/Navoei/SprintFix",
+		"issues": "https://discord.gg/YJpqruvZ97"
+	},
+	"license": "MIT",
+	"icon": "assets/sprintfix/icon.png",
+	"environment": "client",
+	"mixins": [
+		"sprintfix.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=${loader_version}",
+		"minecraft": "${minecraft_version}"
+	}
 }
