@@ -21,13 +21,7 @@ public abstract class MixinLocalPlayer_FixSprintCheck extends AbstractClientPlay
     public ClientInput input;
 
     @Shadow
-    protected abstract boolean canStartSprinting();
-
-    @Shadow
     protected abstract boolean isSprintingPossible(boolean bl);
-
-    @Shadow
-    protected abstract boolean isSlowDueToUsingItem();
 
     @Shadow
     public abstract boolean isMovingSlowly();
