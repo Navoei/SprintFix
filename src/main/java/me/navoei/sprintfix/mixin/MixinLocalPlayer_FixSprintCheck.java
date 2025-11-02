@@ -1,19 +1,51 @@
 package me.navoei.sprintfix.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.mojang.authlib.GameProfile;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.player.ClientInput;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.UseEffects;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LocalPlayer.class)
-public abstract class MixinLocalPlayer_FixSprintCheck {
+public abstract class MixinLocalPlayer_FixSprintCheck extends AbstractClientPlayer {
     @Shadow
-    public abstract boolean isUsingItem();
+    public ClientInput input;
 
-    @ModifyReturnValue(method = "shouldStopRunSprinting", at = @At("RETURN"))
-    private boolean sprintfix$addItemUseCheck(boolean original) {
-        return original || this.isUsingItem();
+    @Shadow
+    protected abstract boolean canStartSprinting();
+
+    @Unique
+    private boolean sprintfix$shouldRestoreSprint = false;
+
+    public MixinLocalPlayer_FixSprintCheck(ClientLevel clientLevel, GameProfile gameProfile) {
+        super(clientLevel, gameProfile);
+    }
+
+    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/AbstractClientPlayer;tick()V", shift = At.Shift.AFTER))
+    private void sprintfix$fixMC152728(CallbackInfo ci) {
+        if (sprintfix$shouldRestoreSprint && !this.input.hasForwardImpulse()) {
+            sprintfix$shouldRestoreSprint = false;
+        }
+
+        if (this.isSprinting() && this.isUsingItem()) {
+            ItemStack stack = this.getUseItem();
+            if (!stack.isEmpty() && !stack.getOrDefault(DataComponents.USE_EFFECTS, UseEffects.DEFAULT).canSprint()) {
+                this.setSprinting(false);
+                sprintfix$shouldRestoreSprint = true;
+            }
+        } else if (sprintfix$shouldRestoreSprint && !this.isUsingItem()) {
+            this.setSprinting(this.canStartSprinting());
+            sprintfix$shouldRestoreSprint = false;
+        }
     }
 }
 
