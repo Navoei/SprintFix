@@ -5,7 +5,9 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.ClientInput;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.UseEffects;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -39,7 +41,7 @@ public abstract class MixinLocalPlayer_FixSprintCheck extends AbstractClientPlay
 
         if (this.isSprinting() && this.isUsingItem()) {
             ItemStack stack = this.getUseItem();
-            if (!stack.isEmpty() /*&& !stack.getOrDefault(DataComponents.USE_EFFECTS, UseEffects.DEFAULT).canSprint()*/) {
+            if (!stack.isEmpty() && !stack.getOrDefault(DataComponents.USE_EFFECTS, UseEffects.DEFAULT).canSprint()) {
                 this.setSprinting(false);
                 sprintfix$shouldRestoreSprint = true;
             }
